@@ -3,21 +3,22 @@
 **Author**: humam mkhzoumi
 **Version**: 1.0.0
 ## Overview
-<!-- Provide a high level overview of what this application is and why you are building it, beyond the fact that it's an assignment for this class. (i.e. What's your problem domain?) -->
+this application is for finding the location on map, by entering the name of the city.
 
 ## Getting Started
-<!-- What are the steps that a user must take in order to build this app on their own machine and get it running? -->
+just navigate to : https://city-explorer-mkhzoumi.netlify.app/
+and enter the name of the city.
+
 
 ## Architecture
-<!-- Provide a detailed description of the application design. What technologies (languages, libraries, etc) you're using, and any other relevant design information. -->
+this application was made with javascript using React, and bootstrap for styling, and axios for API getting command.
 
 ## Change Log
-<!-- Use this area to document the iterative changes made to your application as each feature is successfully implemented. Use time stamps. Here's an example:
+13-06-2021 6:00pm - Application now has a fully-functional form and map display.
 
-01-01-2001 4:59pm - Application now has a fully-functional express server, with a GET route for the location resource. -->
 
 ## Credit and Collaborations
-<!-- Give credit (and a link) to other people or resources that helped you build this application. -->
+shatha alsmadi: https://github.com/shathasmadi
 
 
 
