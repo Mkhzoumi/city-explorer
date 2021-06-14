@@ -7,6 +7,7 @@ import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 import Image from 'react-bootstrap/Image';
 import Modal from 'react-bootstrap/Modal';
+import Weather from './Components/Weather';
 
 class App extends react.Component {
   constructor(props) {
@@ -16,7 +17,8 @@ class App extends react.Component {
       userInput: '',
       status: false,
       cityData: [],
-      show:false
+      show: false,
+      weatherData: []
     }
   }
 
@@ -29,27 +31,30 @@ class App extends react.Component {
   submit = async (e) => {
     e.preventDefault();
 
-    this.temp='';
+    this.temp = '';
     try {
       let userData = await axios.get(`https://us1.locationiq.com/v1/search.php?key=pk.e30a9dbbf203ed5e49c8e75e86f0ea56&q=${this.state.userInput}&format=json`);
-      this.temp=this.state.userInput;
+      this.temp = this.state.userInput;
+      let weatherData = await axios.get(`https://city-explorer-api-mkhzoumi.herokuapp.com/data`)
       this.setState({
         cityData: userData.data,
-        status: true
+        status: true,
+        weatherData: weatherData.data.data
       });
+      console.log(weatherData.data.data.[0].weather.description);
     } catch (error) {
       this.setState({
         show: true,
-        status:false
+        status: false
       })
-    }   
+    }
   }
 
 
-  handleClose=()=>{
-this.setState({
-  show: false
-})
+  handleClose = () => {
+    this.setState({
+      show: false
+    })
   }
 
 
@@ -57,56 +62,54 @@ this.setState({
   render() {
     return (
       <>
-      <div class='cont' style={{display: 'grid', 'grid-template-columns': '1fr 2fr','grid-gap': '10em',padding: '5%'}}>
-        <div class='form'>
-        <Form onSubmit={this.submit} style={{border:'1px solid', padding:'1em'}}>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>City Name</Form.Label>
-            <Form.Control type="text" placeholder="Enter City Name" onChange={this.change} />
-          </Form.Group>
-          <Button variant="secondary" type="submit"  >
-            Explore!
-          </Button>
-        </Form>
-        </div>
-
-        <div class='table'>
-        
-
-
-        {this.state.status &&
-          <div>
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>City Name</th>
-                  <th>Latitude</th>
-                  <th>Longtitude</th>
-                </tr>
-              </thead>
-              <tbody>
-
-                <tr>
-                  <td>{this.temp}</td>
-                  <td>{this.state.cityData[0].lat}</td>
-                  <td>{this.state.cityData[0].lon}</td>
-                </tr>
-              </tbody>
-            </Table>
-            <Image src={`https://maps.locationiq.com/v3/staticmap?key=pk.e30a9dbbf203ed5e49c8e75e86f0ea56&center=${this.state.cityData[0].lat},${this.state.cityData[0].lon}&zoom=1-18`} roundedCircle fluid  style={{'margin-left':'10%'}}/>
-
+        <div class='cont' style={{ display: 'grid', 'grid-template-columns': '1fr 2fr', 'grid-gap': '10em', padding: '5%' }}>
+          <div class='form'>
+            <Form onSubmit={this.submit} style={{ border: '1px solid', padding: '1em' }}>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>City Name</Form.Label>
+                <Form.Control type="text" placeholder="Enter City Name" onChange={this.change} />
+              </Form.Group>
+              <Button variant="secondary" type="submit"  >
+                Explore!
+              </Button>
+            </Form>
+            {this.state.status &&
+              <Weather
+                weatherData={this.state.weatherData}
+              />
+            }
           </div>
-          }
-</div>
 
 
-
-
+          <div class='table'>
+            {this.state.status &&
+              <div>
+                <Table striped bordered hover>
+                  <thead>
+                    <tr>
+                      <th>City Name</th>
+                      <th>Latitude</th>
+                      <th>Longtitude</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{this.temp}</td>
+                      <td>{this.state.cityData[0].lat}</td>
+                      <td>{this.state.cityData[0].lon}</td>
+                    </tr>
+                  </tbody>
+                </Table>
+                <Image src={`https://maps.locationiq.com/v3/staticmap?key=pk.e30a9dbbf203ed5e49c8e75e86f0ea56&center=${this.state.cityData[0].lat},${this.state.cityData[0].lon}&zoom=1-18`} roundedCircle fluid style={{ 'margin-left': '10%' }} />
+              </div>
+            }
+          </div>
         </div>
+
 
         <Modal show={this.state.show} onHide={this.handleClose}>
           <Modal.Header>
-            <Modal.Title style={{color:'red'}}>Error!</Modal.Title>
+            <Modal.Title style={{ color: 'red' }}>Error!</Modal.Title>
           </Modal.Header>
           <Modal.Body>please enter a valid location!</Modal.Body>
           <Modal.Footer>
@@ -115,7 +118,7 @@ this.setState({
             </Button>
           </Modal.Footer>
         </Modal>
-        
+
       </>
     )
   }
