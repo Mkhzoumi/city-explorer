@@ -9,6 +9,7 @@ import Image from 'react-bootstrap/Image';
 import Modal from 'react-bootstrap/Modal';
 import Weather from './Components/Weather';
 
+
 class App extends react.Component {
   constructor(props) {
     super(props);
@@ -18,7 +19,10 @@ class App extends react.Component {
       status: false,
       cityData: [],
       show: false,
-      weatherData: []
+      weatherData: [],
+      lat: '',
+      lon: '',
+      weatherStatus: false
     }
   }
 
@@ -35,13 +39,19 @@ class App extends react.Component {
     try {
       let userData = await axios.get(`https://us1.locationiq.com/v1/search.php?key=pk.e30a9dbbf203ed5e49c8e75e86f0ea56&q=${this.state.userInput}&format=json`);
       this.temp = this.state.userInput;
-      let weatherData = await axios.get(`https://city-explorer-api-mkhzoumi.herokuapp.com/data`)
       this.setState({
         cityData: userData.data,
         status: true,
-        weatherData: weatherData.data.data
+        lat: userData.data[0].lat,
+        lon: userData.data[0].lon
       });
-      console.log(weatherData.data.data.[0].weather.description);
+      let weatherData = await axios.get(`${process.env.REACT_APP_URL}?lon=${this.state.lon}&lat=${this.state.lat}`);
+      this.setState({
+        weatherData: weatherData.data,
+        weatherStatus: true
+
+      });
+      console.log(userData.data[0].lon);
     } catch (error) {
       this.setState({
         show: true,
@@ -73,11 +83,6 @@ class App extends react.Component {
                 Explore!
               </Button>
             </Form>
-            {this.state.status &&
-              <Weather
-                weatherData={this.state.weatherData}
-              />
-            }
           </div>
 
 
@@ -100,6 +105,11 @@ class App extends react.Component {
                     </tr>
                   </tbody>
                 </Table>
+                {this.state.weatherStatus &&
+                  <Weather
+                    weatherData={this.state.weatherData}
+                  />
+                }
                 <Image src={`https://maps.locationiq.com/v3/staticmap?key=pk.e30a9dbbf203ed5e49c8e75e86f0ea56&center=${this.state.cityData[0].lat},${this.state.cityData[0].lon}&zoom=1-18`} roundedCircle fluid style={{ 'margin-left': '10%' }} />
               </div>
             }
@@ -118,14 +128,9 @@ class App extends react.Component {
             </Button>
           </Modal.Footer>
         </Modal>
-
       </>
     )
   }
-
-
-
-
 };
 
 
