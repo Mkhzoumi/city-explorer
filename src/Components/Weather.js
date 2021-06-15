@@ -1,25 +1,30 @@
 import react from 'react';
-import ListGroup from 'react-bootstrap/ListGroup'
+import Table from 'react-bootstrap/Table';
+
 
 class Weather extends react.Component {
 
     render() {
+        console.log(this.props.weatherData);
         return (
-            <div>
-               
-            <ListGroup style={{'margin-top': '10%'}}>
-            <h2 style={{'text-align':'center'}}>Forecast</h2>{
-    this.props.weatherData.map(value => {
-        return <ListGroup.Item>{value.weather.description}</ListGroup.Item>
-        })}
-
-            </ListGroup>
-            </div>
+            <Table striped bordered hover style={{'margin-top':'2%'}}>
+                <thead>
+                    <tr>
+                        <th>Forcast</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{this.props.weatherData[0].description}</td>
+                        <td>{this.props.weatherData[0].date}</td>
+                    </tr>
+                </tbody>
+            </Table>
         )
     }
 
 }
-
 
 
 
