@@ -8,6 +8,8 @@ import Table from 'react-bootstrap/Table';
 import Image from 'react-bootstrap/Image';
 import Modal from 'react-bootstrap/Modal';
 import Weather from './Components/Weather';
+import Movies from './Components/Movies';
+
 
 
 class App extends react.Component {
@@ -22,7 +24,9 @@ class App extends react.Component {
       weatherData: [],
       lat: '',
       lon: '',
-      weatherStatus: false
+      weatherStatus: false,
+      moviesData: '',
+      moviesStatus: false
     }
   }
 
@@ -51,7 +55,14 @@ class App extends react.Component {
         weatherStatus: true
 
       });
-      console.log(userData.data[0].lon);
+      let moviesData = await axios.get(`https://city-explorer-api-mkhzoumi.herokuapp.com/movies?query=${this.state.userInput}`)
+      this.setState({
+        moviesData: moviesData.data,
+        moviesStatus: true
+      });
+
+      console.log(moviesData.data);
+
     } catch (error) {
       this.setState({
         show: true,
@@ -83,7 +94,15 @@ class App extends react.Component {
                 Explore!
               </Button>
             </Form>
+            {this.state.status &&
+
+              <Image src={`https://maps.locationiq.com/v3/staticmap?key=pk.e30a9dbbf203ed5e49c8e75e86f0ea56&center=${this.state.cityData[0].lat},${this.state.cityData[0].lon}&zoom=1-18`} rounded fluid style={{ 'margin-top': '5%' }} />
+            }
           </div>
+
+
+
+
 
 
           <div class='table'>
@@ -110,7 +129,12 @@ class App extends react.Component {
                     weatherData={this.state.weatherData}
                   />
                 }
-                <Image src={`https://maps.locationiq.com/v3/staticmap?key=pk.e30a9dbbf203ed5e49c8e75e86f0ea56&center=${this.state.cityData[0].lat},${this.state.cityData[0].lon}&zoom=1-18`} roundedCircle fluid style={{ 'margin-left': '10%' }} />
+                {this.state.moviesStatus &&
+                  <Movies
+                    moviesData={this.state.moviesData}
+                  />
+
+                }
               </div>
             }
           </div>
