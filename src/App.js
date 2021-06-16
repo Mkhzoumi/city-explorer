@@ -55,7 +55,7 @@ class App extends react.Component {
         weatherStatus: true
 
       });
-      let moviesData = await axios.get(`http://localhost:8080/movies?query=${this.state.userInput}`)
+      let moviesData = await axios.get(`https://city-explorer-api-mkhzoumi.herokuapp.com/movies?query=${this.state.userInput}`)
       this.setState({
         moviesData: moviesData.data,
         moviesStatus: true
